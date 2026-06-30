@@ -36,10 +36,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ featuredProducts, brands, homePag
       />
       <DynamicHomeHero data={homePageData} />
       <DynamicMainCategories />
-      <DynamicBrandsSection brands={brands} />
       <DynamicWhatWeDo data={homePageData} />
       <DynamicFeaturedProducts products={featuredProducts} />
       <DynamicStatsBand data={homePageData} />
+      <DynamicBrandsSection brands={brands} />
       <DynamicCustomerReviews />
       <DynamicCtaBand />
     </>

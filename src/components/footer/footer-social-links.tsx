@@ -5,29 +5,14 @@ import { SocialLink } from '@/interfaces/social-link'
 
 export const socialLinks: SocialLink[] = [
   {
-    name: 'Instagram',
-    link: '#',
-    icon: '/images/icons/instagram.svg',
+    name: 'eBay',
+    link: 'https://www.ebay.com/usr/aarfa_marine',
+    icon: '/images/ebay.png',
   },
   {
-    name: 'YouTube',
-    link: '#',
-    icon: '/images/icons/youtube.svg',
-  },
-  {
-    name: 'Twitter',
-    link: '#',
-    icon: '/images/icons/twitter.svg',
-  },
-  {
-    name: 'Dribbble',
-    link: '#',
-    icon: '/images/icons/dribbble.svg',
-  },
-  {
-    name: 'Github',
-    link: '#',
-    icon: '/images/icons/github.svg',
+    name: 'IndiaMART',
+    link: 'https://www.indiamart.com/aarfa-marine-gujarat/',
+    icon: '/images/indiamart.png',
   },
 ]
 
@@ -65,14 +50,14 @@ const SocialLinkItem: FC<SocialLinkItemProps> = ({ item }) => (
         },
       }}
       href={item.link}
+      title={item.name}
     >
       {/* eslint-disable-next-line */}
-      <img src={item.icon} alt={item.name + 'icon'} />
+      <img src={item.icon} alt={item.name + ' icon'} />
     </Link>
   </Box>
 )
 
-// default
 const SocialLinks: FC = () => {
   return (
     <Box sx={{ ml: -1 }}>
