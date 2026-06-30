@@ -16,8 +16,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (category) filter.category = category
       if (featured === 'true') filter.featured = true
       if (search) {
-        // Optimized text search instead of slow regex
-        filter.$text = { $search: search as string }
+        // Find matching categories first so searching by category name returns products
+        const { Category } = await import('@/lib/models')
+        const matchingCategories = await Category.find({
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { mainCategory: { $regex: search, $options: 'i' } }
+          ]
+        }).select('_id')
+        const catIds = matchingCategories.map((c: any) => c._id)
+
+        filter.$or = [
+          { title: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { brandName: { $regex: search, $options: 'i' } },
+        ]
+        
+        if (catIds.length > 0) {
+          filter.$or.push({ category: { $in: catIds } })
+        }
       }
       const products = await Product.find(filter)
         .populate('category', 'name')
