@@ -105,7 +105,7 @@ const Footer: FC = () => {
                 Quick Links
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {[['Home', '/'], ['About Us', '/about'], ['Products', '/products'], ['Services', '/services'], ['Contact', '/contact']].map(([label, path]) => (
+                {[['Home', '/'], ['About Us', '/about'], ['Products', '/products'], ['Services', '/services'], ['Gallery', '/gallery'], ['Contact', '/contact']].map(([label, path]) => (
                   <Link 
                     key={label}
                     href={path} 

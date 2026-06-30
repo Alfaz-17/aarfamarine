@@ -101,6 +101,7 @@ const Header: FC = () => {
       ]
     },
     { label: 'New Arrivals', path: '/new-arrivals' },
+    { label: 'Gallery', path: '/gallery' },
     { label: 'Contact Us', path: '/contact' },
   ]
 

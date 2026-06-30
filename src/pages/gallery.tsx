@@ -67,12 +67,16 @@ const Gallery: NextPageWithLayout<GalleryProps> = ({ images }) => {
             </Tabs>
           </Box>
 
-          {/* Technical Masonry-like Grid */}
+          {/* Asymmetric Compact Masonry Grid */}
           <Box sx={{ 
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-            gap: 3,
-            autoRows: 'minmax(250px, auto)'
+            columnCount: { xs: 1, sm: 2, md: 3, lg: 4 },
+            columnGap: '12px',
+            '& > div': {
+              breakInside: 'avoid',
+              mb: '12px',
+              display: 'inline-block',
+              width: '100%',
+            }
           }}>
             {filteredImages.length > 0 ? (
               filteredImages.map((img, idx) => (
@@ -81,27 +85,27 @@ const Gallery: NextPageWithLayout<GalleryProps> = ({ images }) => {
                   onClick={() => setLightboxImage(img.url)}
                   sx={{
                     position: 'relative',
-                    borderRadius: 2,
+                    borderRadius: 1.5,
                     overflow: 'hidden',
                     cursor: 'pointer',
                     bgcolor: 'common.black',
-                    boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-                    gridRow: idx % 4 === 0 ? 'span 2' : 'span 1',
-                    minHeight: idx % 4 === 0 ? { xs: 300, md: 520 } : { xs: 250, md: 250 },
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                     '&::before': {
                       content: '""', position: 'absolute', inset: 0, 
                       border: '1px solid rgba(255,255,255,0.1)', 
-                      borderRadius: 2, zIndex: 2, pointerEvents: 'none'
+                      borderRadius: 1.5, zIndex: 2, pointerEvents: 'none'
                     },
                     '&:hover img': { transform: 'scale(1.05)', opacity: 0.8 },
-                    '&:hover .overlay': { opacity: 1, transform: 'translateY(0)' }
+                    '&:hover .overlay': { opacity: 1 }
                   }}
                 >
                   <img 
                     src={img.url} 
                     alt={img.title || img.category} 
                     style={{ 
-                      width: '100%', height: '100%', objectFit: 'cover',
+                      width: '100%', 
+                      height: 'auto', 
+                      display: 'block',
                       transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                       opacity: 0.9
                     }} 
@@ -110,38 +114,38 @@ const Gallery: NextPageWithLayout<GalleryProps> = ({ images }) => {
                   {/* Technical Overlay */}
                   <Box className="overlay" sx={{
                     position: 'absolute', inset: 0,
-                    background: 'linear-gradient(to top, rgba(10,25,47,0.95) 0%, rgba(10,25,47,0.4) 40%, transparent 100%)',
+                    background: 'linear-gradient(to top, rgba(10,25,47,0.95) 0%, rgba(10,25,47,0.2) 60%, transparent 100%)',
                     display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-                    p: 3, opacity: 0, transform: 'translateY(10px)',
+                    p: 2, opacity: 0,
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     zIndex: 3
                   }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                       <Box>
-                        <Typography variant="overline" sx={{ color: 'primary.light', fontWeight: 800, letterSpacing: 2 }}>
+                        <Typography variant="overline" sx={{ color: 'primary.light', fontWeight: 800, letterSpacing: 1.5, fontSize: '0.65rem' }}>
                           {img.category}
                         </Typography>
                         {img.title && (
-                          <Typography variant="h6" sx={{ color: 'common.white', fontWeight: 700, mt: 0.5, lineHeight: 1.2 }}>
+                          <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mt: 0.2, lineHeight: 1.2 }}>
                             {img.title}
                           </Typography>
                         )}
                       </Box>
                       <Box sx={{ 
-                        width: 40, height: 40, borderRadius: '50%', 
+                        width: 32, height: 32, borderRadius: '50%', 
                         bgcolor: 'primary.main', color: 'common.white',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, ml: 2
+                        flexShrink: 0, ml: 1
                       }}>
-                        <ZoomInIcon />
+                        <ZoomInIcon fontSize="small" />
                       </Box>
                     </Box>
                   </Box>
                 </Box>
               ))
             ) : (
-              <Box sx={{ gridColumn: '1 / -1', py: 10, textAlign: 'center', border: '1px dashed rgba(10,25,47,0.2)', borderRadius: 2 }}>
-                <Typography variant="h6" color="text.secondary">
+              <Box sx={{ columnSpan: 'all', py: 10, textAlign: 'center', border: '1px dashed rgba(10,25,47,0.2)', borderRadius: 2 }}>
+                <Typography variant="subtitle1" color="text.secondary">
                   No images uploaded yet.
                 </Typography>
               </Box>

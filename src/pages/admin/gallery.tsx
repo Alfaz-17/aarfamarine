@@ -9,8 +9,10 @@ export default function AdminGallery() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('workshop');
+  const [activeTab, setActiveTab] = useState('all');
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const fetchImages = async () => {
@@ -31,7 +33,14 @@ export default function AdminGallery() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(selectedFile);
     }
   };
 
@@ -43,42 +52,75 @@ export default function AdminGallery() {
     setMessage({ type: '', text: '' });
 
     try {
-      // 1. Convert file to base64
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+      // 1. Compress file to base64 instantly via Canvas
+      const fileBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new window.Image();
+          img.src = event.target?.result as string;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 1200;
+            const MAX_HEIGHT = 1200;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            
+            // Compress to highly optimized JPEG
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            resolve(dataUrl);
+          };
+          img.onerror = error => reject(error);
+        };
+        reader.onerror = error => reject(error);
+      });
       
-      reader.onloadend = async () => {
-        const fileBase64 = reader.result;
-        
-        // 2. Upload to Cloudinary via our upload API
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileBase64, folder: 'aarfa-marine/gallery' }),
-        });
-        
-        const uploadData = await uploadRes.json();
-        
-        if (!uploadRes.ok) throw new Error(uploadData.error || 'Failed to upload image');
-        
-        // 3. Save to database
-        const saveRes = await fetch('/api/gallery', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            url: uploadData.secure_url,
-            title,
-            category
-          }),
-        });
-        
-        if (!saveRes.ok) throw new Error('Failed to save to database');
-        
-        setMessage({ type: 'success', text: 'Image uploaded successfully!' });
-        setFile(null);
-        setTitle('');
-        fetchImages();
-      };
+      // 2. Upload to Cloudinary via our upload API
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileBase64, folder: 'aarfa-marine/gallery' }),
+      });
+      
+      const uploadData = await uploadRes.json();
+      
+      if (!uploadRes.ok) throw new Error(uploadData.error || 'Failed to upload image');
+      
+      // 3. Save to database
+      const saveRes = await fetch('/api/gallery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: uploadData.secure_url,
+          title,
+          category
+        }),
+      });
+      
+      if (!saveRes.ok) throw new Error('Failed to save to database');
+      
+      setMessage({ type: 'success', text: 'Image uploaded successfully!' });
+      setFile(null);
+      setPreview(null);
+      setTitle('');
+      fetchImages();
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'An error occurred during upload' });
     } finally {
@@ -158,18 +200,24 @@ export default function AdminGallery() {
 
             <div>
               <label className="block text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-2">Select Image</label>
-              <div className="border-2 border-dashed border-slate-700 p-6 text-center hover:border-primary-light transition-colors relative">
+              <div className="border-2 border-dashed border-slate-700 p-2 text-center hover:border-primary-light transition-colors relative min-h-[140px] flex flex-col items-center justify-center">
                 <input 
                   type="file" 
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   required
                 />
-                <ImageIcon className="w-8 h-8 text-slate-500 mx-auto mb-2" />
-                <span className="text-sm font-mono text-slate-300">
-                  {file ? file.name : 'Click or drag image here'}
-                </span>
+                {preview ? (
+                  <img src={preview} alt="Preview" className="max-h-[120px] object-contain mb-2" />
+                ) : (
+                  <>
+                    <ImageIcon className="w-8 h-8 text-slate-500 mx-auto mb-2" />
+                    <span className="text-sm font-mono text-slate-300">
+                      Click or drag image here
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -189,6 +237,22 @@ export default function AdminGallery() {
 
         {/* Gallery Grid */}
         <div className="lg:col-span-2">
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2 custom-scrollbar">
+            {['all', 'workshop', 'office', 'company'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-1.5 text-[10px] font-mono font-bold uppercase tracking-widest border transition-colors ${
+                  activeTab === tab 
+                    ? 'bg-primary-light/20 text-primary-light border-primary-light/50' 
+                    : 'bg-slate-900/50 text-slate-500 border-slate-800 hover:text-slate-300'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
           {loading ? (
             <div className="text-center py-20 text-slate-500 font-mono animate-pulse uppercase text-xs tracking-widest">
               Loading gallery matrix...
@@ -199,7 +263,7 @@ export default function AdminGallery() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {images.map(img => (
+              {images.filter(img => activeTab === 'all' || img.category === activeTab).map(img => (
                 <div key={img._id} className="group relative border border-slate-800 overflow-hidden bg-slate-900 aspect-square">
                   <img src={img.url} alt={img.title} className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity">
