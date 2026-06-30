@@ -28,8 +28,8 @@ const Footer: FC = () => {
         position: 'relative',
         overflow: 'hidden',
         color: 'rgba(255,255,255,0.7)',
-        pt: { xs: 4, md: 6 },
-        pb: { xs: 2, md: 3 },
+        pt: { xs: 6, md: 8 },
+        pb: { xs: 4, md: 5 },
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -94,12 +94,7 @@ const Footer: FC = () => {
           <Grid item xs={12} md={2}>
             <Box sx={{ 
               height: '100%', 
-              bgcolor: 'rgba(255,255,255,0.02)', 
-              border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 2, 
               p: 2.5,
-              transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
               <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Quick Links
@@ -134,12 +129,7 @@ const Footer: FC = () => {
           <Grid item xs={12} md={3}>
             <Box sx={{ 
               height: '100%', 
-              bgcolor: 'rgba(255,255,255,0.02)', 
-              border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 2, 
               p: 2.5,
-              transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
               <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Head Office
@@ -154,12 +144,7 @@ const Footer: FC = () => {
           <Grid item xs={12} md={3}>
             <Box sx={{ 
               height: '100%', 
-              bgcolor: 'rgba(255,255,255,0.02)', 
-              border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 2, 
               p: 2.5,
-              transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
               <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Contact Us
@@ -206,9 +191,12 @@ const Footer: FC = () => {
           <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
             &copy; {new Date().getFullYear()} Aarfa Marine. All rights reserved.
           </Typography>
-          <Box sx={{ display: 'flex', gap: 3 }}>
+          <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
             <Link href="/privacy" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Privacy Policy</Link>
             <Link href="/terms" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Terms of Service</Link>
+            <Typography component="a" href="https://alfaz-dev.vercel.app/" target="_blank" rel="noopener noreferrer" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>
+              Developed by <span style={{ color: '#93C5FD', fontWeight: 600 }}>Alfaz</span>
+            </Typography>
           </Box>
         </Box>
       </Container>

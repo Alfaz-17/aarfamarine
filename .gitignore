@@ -2,8 +2,6 @@
 
 # dependencies
 node_modules/
-*.mp4
-*.webm
 /.pnp
 .pnp.js
 
