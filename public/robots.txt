@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aarfamarine.com/sitemap.xml
+Sitemap: https://aarfamarine.com/image-sitemap.xml
