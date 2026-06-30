@@ -1,4 +1,4 @@
-import React, { FC, useRef, useEffect } from 'react'
+import React, { FC } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
@@ -58,40 +58,6 @@ interface HomeHeroProps {
 }
 
 const HomeHero: FC<HomeHeroProps> = ({ data }) => {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  // Pick the right video source on mount and ensure autoplay
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    // Select source based on screen width (runs once on mount)
-    const isMobile = window.innerWidth <= 600
-    const src = isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero.mp4'
-
-    video.src = src
-    video.load()
-
-    // Ensure muted + playsinline attributes are set before play()
-    video.muted = true
-    video.playsInline = true
-    video.defaultMuted = true
-
-    const playPromise = video.play()
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay was prevented — try again after user interaction
-        const retryPlay = () => {
-          video.play().catch(() => {})
-          document.removeEventListener('touchstart', retryPlay)
-          document.removeEventListener('click', retryPlay)
-        }
-        document.addEventListener('touchstart', retryPlay, { once: true })
-        document.addEventListener('click', retryPlay, { once: true })
-      })
-    }
-  }, [])
-
   const headline = data?.heroHeadline || "Marine Navigation & Communication Systems"
   const subtitle = data?.heroSubtitle || "Trader, distributor, and service provider for reconditioned marine electronics, navigation aids, and automation equipment."
   const stats = data?.heroStats || defaultExps
@@ -112,15 +78,13 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
         overflow: 'hidden',
         backgroundColor: 'primary.dark',
       }}>
-        {/* Background hero video — compressed H.264 MP4 for universal browser support */}
+        {/* Background hero video — single compressed MP4, no JS needed */}
         <video
-          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          preload="auto"
-          poster="/videos/hero-poster.jpg"
+          src="/videos/hero.mp4"
           style={{
             position: 'absolute',
             width: '100%',
