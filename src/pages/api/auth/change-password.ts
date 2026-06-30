@@ -15,11 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // If logged in via .env fallback, prevent password change
-    if (session.userId === 'admin') {
-      return res.status(400).json({ error: 'Cannot change password for environment-configured system admin. Please update the .env file.' });
-    }
-
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
@@ -28,24 +23,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await connectToDatabase();
     
-    // Find the user by ID
-    const user = await User.findById(session.userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Verify current password
-    const isValid = await bcrypt.compare(currentPassword, user.password);
-    if (!isValid) {
-      return res.status(401).json({ error: 'Incorrect current password' });
-    }
-
-    // Hash and update new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    user.password = hashedPassword;
-    await user.save();
+    if (session.userId === 'admin') {
+      const adminPassword = process.env.ADMIN_PASSWORD;
+      if (currentPassword !== adminPassword) {
+        return res.status(401).json({ error: 'Incorrect current password' });
+      }
+      
+      let user = await User.findOne({ email: session.email });
+      if (!user) {
+        user = new User({
+          name: 'System Admin',
+          email: session.email,
+          password: hashedPassword
+        });
+      } else {
+        user.password = hashedPassword;
+      }
+      await user.save();
+    } else {
+      const user = await User.findById(session.userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const isValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isValid) {
+        return res.status(401).json({ error: 'Incorrect current password' });
+      }
+
+      user.password = hashedPassword;
+      await user.save();
+    }
 
     return res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {

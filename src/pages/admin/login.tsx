@@ -135,7 +135,12 @@ export default function AdminLoginPage() {
             </button>
           </form>
           
-          <div className="mt-8 pt-6 border-t border-primary-light/10 text-center">
+          <div className="mt-8 pt-6 border-t border-primary-light/10 text-center flex flex-col gap-3">
+             <Link href="/admin/settings">
+               <a className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-slate-500 hover:text-primary-light transition-colors no-underline">
+                 Change Password
+               </a>
+             </Link>
              <Link href="/">
                <a className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-primary-light hover:text-white transition-colors no-underline">
                  Abort Access & Return Home
