@@ -93,6 +93,15 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
     return () => mobileQuery.removeEventListener('change', updateVideoSource)
   }, [])
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      // Force play for aggressive mobile browser policies
+      videoRef.current.play().catch((err) => console.log('Video autoplay blocked:', err));
+    }
+  }, [videoSrc])
+
   return (
     <>
       <Head>
@@ -111,6 +120,7 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
       }}>
         {/* Video element with poster for fast first-frame display */}
         <video
+          ref={videoRef}
           key={videoSrc}
           src={videoSrc}
           autoPlay
