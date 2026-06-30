@@ -19,7 +19,7 @@ export default function AdminSettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-  const [passwords, setPasswords] = useState({ currentPassword: '********', newPassword: '' });
+  const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '' });
   const [showPasswords, setShowPasswords] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
