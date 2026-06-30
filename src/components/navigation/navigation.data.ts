@@ -32,8 +32,8 @@ export const navigations: Navigation[] = [
     path: '/projects',
   },
   {
-    label: 'Infrastructure',
-    path: '/infrastructure',
+    label: 'Gallery',
+    path: '/gallery',
   },
   {
     label: 'Contact Us',

@@ -19,11 +19,11 @@ import { GalleryImage } from '@/lib/models'
 
 const PageHero = dynamic(() => import('@/components/page-hero'))
 
-interface InfrastructureProps {
+interface GalleryProps {
   images: any[]
 }
 
-const Infrastructure: NextPageWithLayout<InfrastructureProps> = ({ images }) => {
+const Gallery: NextPageWithLayout<GalleryProps> = ({ images }) => {
   const [activeTab, setActiveTab] = useState('all')
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
 
@@ -34,14 +34,14 @@ const Infrastructure: NextPageWithLayout<InfrastructureProps> = ({ images }) => 
   return (
     <>
       <SEO 
-        title="Our Infrastructure & Workshop"
+        title="Photo Gallery"
         description="Explore Aarfa Marine's state-of-the-art office and workshop facilities where we test, recondition, and certify marine electronics."
-        canonicalUrl="/infrastructure"
+        canonicalUrl="/gallery"
       />
 
       <PageHero 
-        title="Our Infrastructure" 
-        subtitle="State-of-the-art workshop and testing facilities in Alang Shipyard."
+        title="Photo Gallery" 
+        subtitle="Explore our workshop and testing facilities."
         image="/images/marine-bridge.jpg"
       />
 
@@ -198,6 +198,6 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-Infrastructure.getLayout = (page: React.ReactElement) => <MainLayout>{page}</MainLayout>
+Gallery.getLayout = (page: React.ReactElement) => <MainLayout>{page}</MainLayout>
 
-export default Infrastructure
+export default Gallery
