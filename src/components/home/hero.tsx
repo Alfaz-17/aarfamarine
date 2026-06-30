@@ -73,13 +73,8 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
     }
   }
 
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [videoReady, setVideoReady] = useState(false)
   const [videoSrc, setVideoSrc] = useState('/videos/hero.webm')
-  
-  const headline = data?.heroHeadline || "Marine Navigation & Communication Systems"
-  const subtitle = data?.heroSubtitle || "Trader, distributor, and service provider for reconditioned marine electronics, navigation aids, and automation equipment."
-  const stats = data?.heroStats || defaultExps
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 600px)')
@@ -95,12 +90,22 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      // Force play for aggressive mobile browser policies
-      videoRef.current.play().catch((err) => console.log('Video autoplay blocked:', err));
+      // CRITICAL: When changing src, we must call .load() to force the browser to fetch the new file
+      videoRef.current.load()
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = true
+      videoRef.current.playsInline = true
+      
+      const playPromise = videoRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => console.log('Video autoplay blocked:', err))
+      }
     }
   }, [videoSrc])
+
+  const headline = data?.heroHeadline || "Marine Navigation & Communication Systems"
+  const subtitle = data?.heroSubtitle || "Trader, distributor, and service provider for reconditioned marine electronics, navigation aids, and automation equipment."
+  const stats = data?.heroStats || defaultExps
 
   return (
     <>
@@ -121,7 +126,6 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
         {/* Video element with poster for fast first-frame display */}
         <video
           ref={videoRef}
-          key={videoSrc}
           src={videoSrc}
           autoPlay
           loop
