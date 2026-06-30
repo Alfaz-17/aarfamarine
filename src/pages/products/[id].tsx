@@ -217,17 +217,26 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 2, mb: 6, flexDirection: { xs: 'column', sm: 'row' } }}>
-                <Button 
-                  variant="contained" 
-                  size="large" 
-                  onClick={handleRequestQuoteClick}
-                  sx={{ py: 1.5, px: 4, fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
-                >
-                  Request Quote
-                </Button>
-                <Button variant="outlined" size="large" sx={{ py: 1.5, px: 4, fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}>
-                  Contact Sales
-                </Button>
+                <Link href={`/contact?message=${encodeURIComponent(`I am interested in requesting a quote for: ${product.title}`)}`} passHref>
+                  <Button 
+                    component="a"
+                    variant="contained" 
+                    size="large" 
+                    sx={{ py: 1.5, px: 4, fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
+                  >
+                    Request Quote
+                  </Button>
+                </Link>
+                <Link href={`/contact?message=${encodeURIComponent(`I would like to contact sales regarding: ${product.title}`)}`} passHref>
+                  <Button 
+                    component="a"
+                    variant="outlined" 
+                    size="large" 
+                    sx={{ py: 1.5, px: 4, fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
+                  >
+                    Contact Sales
+                  </Button>
+                </Link>
               </Box>
 
               {/* Keywords/Tags */}

@@ -120,3 +120,12 @@ const InquirySchema = new Schema({
 }, { timestamps: true })
 
 export const Inquiry: Model<any> = models.Inquiry || model('Inquiry', InquirySchema)
+
+// ── Gallery (Infrastructure & Workshop) ──
+const GalleryImageSchema = new Schema({
+  url: { type: String, required: true },
+  title: { type: String },
+  category: { type: String, enum: ['office', 'workshop', 'company', 'other'], default: 'other' },
+}, { timestamps: true })
+
+export const GalleryImage: Model<any> = models.GalleryImage || model('GalleryImage', GalleryImageSchema)

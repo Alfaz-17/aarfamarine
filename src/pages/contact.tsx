@@ -17,11 +17,23 @@ import { GetStaticProps } from 'next'
 
 const PageHero = dynamic(() => import('@/components/page-hero'))
 
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+
 interface ContactProps {
   settings: any
 }
 
 const Contact: NextPageWithLayout<ContactProps> = ({ settings }) => {
+  const router = useRouter()
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    if (router.isReady && router.query.message) {
+      setMessage(router.query.message as string)
+    }
+  }, [router.isReady, router.query.message])
+
   return (
     <>
       <SEO 
@@ -109,7 +121,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ settings }) => {
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={6}>
-                    <TextField 
+                     <TextField 
                       fullWidth 
                       label="Your Name" 
                       variant="outlined" 
@@ -138,6 +150,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ settings }) => {
                       label="Message or Required Parts" 
                       multiline 
                       rows={4} 
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       variant="outlined" 
                       sx={{ '& .MuiOutlinedInput-root': { color: 'text.primary', '& fieldset': { borderColor: 'divider' }, '&:hover fieldset': { borderColor: 'primary.light' } } }} 
                     />

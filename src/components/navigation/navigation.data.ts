@@ -32,6 +32,10 @@ export const navigations: Navigation[] = [
     path: '/projects',
   },
   {
+    label: 'Infrastructure',
+    path: '/infrastructure',
+  },
+  {
     label: 'Contact Us',
     path: '/contact',
   },

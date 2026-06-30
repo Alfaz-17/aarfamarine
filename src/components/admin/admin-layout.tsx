@@ -14,7 +14,8 @@ import {
   Anchor,
   ShoppingCart,
   Settings as SettingsIcon,
-  MessageSquare
+  MessageSquare,
+  Image
 } from 'lucide-react';
 import { MarineLoader } from '@/components/common/marine-loader';
 
@@ -51,6 +52,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       { name: 'Categories', href: '/admin/categories', icon: Grid3X3 },
       { name: 'Brands', href: '/admin/brands', icon: Award },
       { name: 'Services', href: '/admin/services', icon: Anchor },
+      { name: 'Gallery', href: '/admin/gallery', icon: Image },
       { name: 'Settings', href: '/admin/settings', icon: SettingsIcon },
     ];
 

@@ -28,8 +28,8 @@ const Footer: FC = () => {
         position: 'relative',
         overflow: 'hidden',
         color: 'rgba(255,255,255,0.7)',
-        pt: { xs: 8, md: 10 },
-        pb: { xs: 4, md: 6 },
+        pt: { xs: 4, md: 6 },
+        pb: { xs: 2, md: 3 },
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -56,32 +56,34 @@ const Footer: FC = () => {
       />
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-        <Grid container spacing={4}>
+        <Grid container spacing={3}>
           {/* Company Brand Area */}
           <Grid item xs={12} md={4}>
             <Box sx={{ pr: { md: 2 } }}>
               <Box 
                 sx={{ 
-                  mb: 3, 
+                  mb: 2, 
                   display: 'inline-block', 
                   bgcolor: 'common.white', 
-                  p: 1.5, 
+                  p: 1, 
                   borderRadius: 2,
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)'
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                  transform: 'scale(0.8)',
+                  transformOrigin: 'left'
                 }}
               >
                 <Logo />
               </Box>
-              <Typography variant="h5" sx={{ color: 'common.white', fontWeight: 800, mb: 1, letterSpacing: 0.5 }}>
+              <Typography variant="h6" sx={{ color: 'common.white', fontWeight: 800, mb: 0.5, letterSpacing: 0.5 }}>
                 AARFA MARINE
               </Typography>
               <Typography
                 variant="caption"
-                sx={{ display: 'block', color: 'primary.light', letterSpacing: 2, mb: 3, fontWeight: 600, textTransform: 'uppercase' }}
+                sx={{ display: 'block', color: 'primary.light', letterSpacing: 1.5, mb: 2, fontWeight: 600, textTransform: 'uppercase' }}
               >
                 Marine Navigation Specialists
               </Typography>
-              <Typography variant="body2" sx={{ mb: 4, lineHeight: 1.8, color: 'rgba(255,255,255,0.7)' }}>
+              <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.6, fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>
                 Your trusted partner in marine navigation, supplying reconditioned, tested, and certified marine electronics worldwide.
               </Typography>
               <FooterSocialLinks />
@@ -94,15 +96,15 @@ const Footer: FC = () => {
               height: '100%', 
               bgcolor: 'rgba(255,255,255,0.02)', 
               border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 3, 
-              p: 3,
+              borderRadius: 2, 
+              p: 2.5,
               transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-5px)', bgcolor: 'rgba(255,255,255,0.04)' }
+              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Quick Links
               </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {[['Home', '/'], ['About Us', '/about'], ['Products', '/products'], ['Services', '/services'], ['Contact', '/contact']].map(([label, path]) => (
                   <Link 
                     key={label}
@@ -110,12 +112,12 @@ const Footer: FC = () => {
                     sx={{ 
                       color: 'rgba(255,255,255,0.6)', 
                       textDecoration: 'none', 
-                      fontSize: '0.9rem',
+                      fontSize: '0.8rem',
                       display: 'flex',
                       alignItems: 'center',
                       transition: 'color 0.2s ease, transform 0.2s ease',
                       '&::before': {
-                        content: '""', width: 4, height: 4, borderRadius: '50%', bgcolor: 'primary.light', mr: 1.5, opacity: 0, transition: 'opacity 0.2s ease'
+                        content: '""', width: 4, height: 4, borderRadius: '50%', bgcolor: 'primary.light', mr: 1, opacity: 0, transition: 'opacity 0.2s ease'
                       },
                       '&:hover': { color: 'common.white', transform: 'translateX(3px)' },
                       '&:hover::before': { opacity: 1 }
@@ -134,15 +136,15 @@ const Footer: FC = () => {
               height: '100%', 
               bgcolor: 'rgba(255,255,255,0.02)', 
               border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 3, 
-              p: 3,
+              borderRadius: 2, 
+              p: 2.5,
               transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-5px)', bgcolor: 'rgba(255,255,255,0.04)' }
+              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Head Office
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-line', lineHeight: 1.8 }}>
+              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: '0.8rem' }}>
                 {settings?.headOfficeAddress || 'Navapara Prime, Shop No. 28\nHaluria Chowk to Navapara Road\nBhavnagar 364001, Gujarat, India'}
               </Typography>
             </Box>
@@ -154,32 +156,32 @@ const Footer: FC = () => {
               height: '100%', 
               bgcolor: 'rgba(255,255,255,0.02)', 
               border: '1px solid rgba(255,255,255,0.05)', 
-              borderRadius: 3, 
-              p: 3,
+              borderRadius: 2, 
+              p: 2.5,
               transition: 'transform 0.3s ease, background 0.3s ease',
-              '&:hover': { transform: 'translateY(-5px)', bgcolor: 'rgba(255,255,255,0.04)' }
+              '&:hover': { transform: 'translateY(-3px)', bgcolor: 'rgba(255,255,255,0.04)' }
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1 }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
                 Contact Us
               </Typography>
               
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 <Box>
-                  <Typography variant="body2" sx={{ color: 'common.white' }}>MD & Founder: Afjal Sarvaiya</Typography>
+                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>MD: Afjal Sarvaiya</Typography>
                 </Box>
 
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.5, fontWeight: 600 }}>PHONE</Typography>
-                  <Typography variant="body2" sx={{ color: 'common.white' }}>{settings?.tel1 || '+91 9081811248'}</Typography>
-                  <Typography variant="body2" sx={{ color: 'common.white', mt: 0.3 }}>{settings?.tel2 || '+91 8160002323'}</Typography>
+                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.25, fontWeight: 600, fontSize: '0.65rem' }}>PHONE</Typography>
+                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>{settings?.tel1 || '+91 9081811248'}</Typography>
+                  <Typography variant="body2" sx={{ color: 'common.white', mt: 0.2, fontSize: '0.8rem' }}>{settings?.tel2 || '+91 8160002323'}</Typography>
                 </Box>
 
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.5, fontWeight: 600 }}>EMAIL</Typography>
-                  <Link href={`mailto:${settings?.email1 || 'sales@aarfamarine.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
+                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.25, fontWeight: 600, fontSize: '0.65rem' }}>EMAIL</Typography>
+                  <Link href={`mailto:${settings?.email1 || 'sales@aarfamarine.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
                     {settings?.email1 || 'sales@aarfamarine.com'}
                   </Link>
-                  <Link href={`mailto:${settings?.email2 || 'aarfamarine@gmail.com'}`} sx={{ display: 'block', mt: 0.3, color: 'rgba(255,255,255,0.8)', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
+                  <Link href={`mailto:${settings?.email2 || 'aarfamarine@gmail.com'}`} sx={{ display: 'block', mt: 0.2, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
                     {settings?.email2 || 'aarfamarine@gmail.com'}
                   </Link>
                 </Box>
@@ -191,8 +193,8 @@ const Footer: FC = () => {
         {/* Footer Bottom Area */}
         <Box
           sx={{
-            mt: { xs: 6, md: 8 },
-            pt: 3,
+            mt: { xs: 4, md: 5 },
+            pt: 2,
             borderTop: '1px solid rgba(255,255,255,0.08)',
             display: 'flex',
             justifyContent: 'space-between',
@@ -201,12 +203,12 @@ const Footer: FC = () => {
             flexDirection: { xs: 'column', md: 'row' },
           }}
         >
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)' }}>
+          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
             &copy; {new Date().getFullYear()} Aarfa Marine. All rights reserved.
           </Typography>
           <Box sx={{ display: 'flex', gap: 3 }}>
-            <Link href="/privacy" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.85rem', '&:hover': { color: 'primary.light' } }}>Privacy Policy</Link>
-            <Link href="/terms" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.85rem', '&:hover': { color: 'primary.light' } }}>Terms of Service</Link>
+            <Link href="/privacy" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Privacy Policy</Link>
+            <Link href="/terms" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Terms of Service</Link>
           </Box>
         </Box>
       </Container>

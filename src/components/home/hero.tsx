@@ -111,6 +111,8 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
       }}>
         {/* Video element with poster for fast first-frame display */}
         <video
+          key={videoSrc}
+          src={videoSrc}
           autoPlay
           loop
           muted
@@ -128,9 +130,7 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
             zIndex: 1,
             opacity: 0.8,
           }}
-        >
-          <source src={videoSrc} type={videoSrc.endsWith('.mp4') ? 'video/mp4' : 'video/webm'} />
-        </video>
+        />
       {/* Slight black overlay for cinematic feel and text contrast */}
       <Box sx={{ 
         position: 'absolute', 
