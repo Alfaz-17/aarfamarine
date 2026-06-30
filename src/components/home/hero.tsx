@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState, useEffect } from 'react'
+import React, { FC, useRef, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
@@ -6,10 +6,6 @@ import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 import Head from 'next/head'
 import { StyledButton } from '@/components/styled-button'
-import { useRouter } from 'next/router'
-import InputBase from '@mui/material/InputBase'
-import SearchIcon from '@mui/icons-material/Search'
-import IconButton from '@mui/material/IconButton'
 
 interface Exp {
   label: string
@@ -62,7 +58,39 @@ interface HomeHeroProps {
 }
 
 const HomeHero: FC<HomeHeroProps> = ({ data }) => {
-  // The video is handled via dangerouslySetInnerHTML for better mobile autoplay reliability.
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Pick the right video source on mount and ensure autoplay
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Select source based on screen width (runs once on mount)
+    const isMobile = window.innerWidth <= 600
+    const src = isMobile ? '/videos/hero-mobile.mp4' : '/videos/hero.mp4'
+
+    video.src = src
+    video.load()
+
+    // Ensure muted + playsinline attributes are set before play()
+    video.muted = true
+    video.playsInline = true
+    video.defaultMuted = true
+
+    const playPromise = video.play()
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay was prevented — try again after user interaction
+        const retryPlay = () => {
+          video.play().catch(() => {})
+          document.removeEventListener('touchstart', retryPlay)
+          document.removeEventListener('click', retryPlay)
+        }
+        document.addEventListener('touchstart', retryPlay, { once: true })
+        document.addEventListener('click', retryPlay, { once: true })
+      })
+    }
+  }, [])
 
   const headline = data?.heroHeadline || "Marine Navigation & Communication Systems"
   const subtitle = data?.heroSubtitle || "Trader, distributor, and service provider for reconditioned marine electronics, navigation aids, and automation equipment."
@@ -84,31 +112,25 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
         overflow: 'hidden',
         backgroundColor: 'primary.dark',
       }}>
-        {/* Video element rendered via innerHTML for 100% reliable autoplay on iOS and better performance */}
-        <div
-          dangerouslySetInnerHTML={{
-            __html: `
-              <video
-                autoplay
-                loop
-                muted
-                playsinline
-                preload="metadata"
-                poster="/videos/hero-poster.jpg"
-                style="position: absolute; width: 100%; height: 100%; object-fit: cover; object-position: left center; top: 0; left: 0; z-index: 1; opacity: 0.8;"
-              >
-                <source src="/videos/hero-mobile.mp4" type="video/mp4" media="(max-width: 600px)" />
-                <source src="/videos/hero.webm" type="video/webm" />
-              </video>
-            `
-          }}
+        {/* Background hero video — compressed H.264 MP4 for universal browser support */}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/videos/hero-poster.jpg"
           style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'left center',
             top: 0,
             left: 0,
             zIndex: 1,
+            opacity: 0.8,
           }}
         />
       {/* Slight black overlay for cinematic feel and text contrast */}
