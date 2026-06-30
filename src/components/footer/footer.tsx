@@ -167,7 +167,7 @@ const Footer: FC = () => {
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 <Box>
-                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>MD: Afjal Sarvaiya</Typography>
+                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>MD & Founder: Mr. Afjal Sarvaiya</Typography>
                 </Box>
 
                 <Box>

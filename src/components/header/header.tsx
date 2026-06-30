@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material/styles'
 import Menu from '@mui/icons-material/Menu'
 import Close from '@mui/icons-material/Close'
 import WhatsApp from '@mui/icons-material/WhatsApp'
+import LinkedIn from '@mui/icons-material/LinkedIn'
 import SearchIcon from '@mui/icons-material/Search'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
@@ -266,17 +267,21 @@ const Header: FC = () => {
                 </IconButton>
                 <IconButton 
                   component="a" 
-                  href="https://www.indiamart.com/aarfa-marine-gujarat/" 
+                  href="https://www.linkedin.com/in/aarfa-marine-25120b335/" 
                   target="_blank"
                   rel="noopener noreferrer"
                   size="small"
-                  sx={{ '&:hover': { opacity: 0.8 } }}
+                  sx={{ 
+                    color: '#0A66C2',
+                    backgroundColor: isScrolled ? 'rgba(10, 102, 194, 0.1)' : 'rgba(255,255,255,0.1)',
+                    '&:hover': { opacity: 0.8, backgroundColor: isScrolled ? 'rgba(10, 102, 194, 0.2)' : 'rgba(255,255,255,0.2)' }
+                  }}
                 >
-                  <img src="/images/indiamart.png" alt="IndiaMART" style={{ height: '22px', width: '22px', objectFit: 'contain', borderRadius: '4px' }} />
+                  <LinkedIn fontSize="small" />
                 </IconButton>
                 <IconButton 
                   component="a" 
-                  href="https://wa.me/1234567890" 
+                  href="https://wa.me/918347471248" 
                   target="_blank"
                   rel="noopener noreferrer"
                   size="small"
