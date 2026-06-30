@@ -62,46 +62,7 @@ interface HomeHeroProps {
 }
 
 const HomeHero: FC<HomeHeroProps> = ({ data }) => {
-  const [videoLoaded, setVideoLoaded] = useState(false)
-  const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
-    }
-  }
-
-  const [videoSrc, setVideoSrc] = useState('/videos/hero.webm')
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    const mobileQuery = window.matchMedia('(max-width: 600px)')
-    const updateVideoSource = () => {
-      setVideoSrc(mobileQuery.matches ? '/videos/hero-mobile.mp4' : '/videos/hero.webm')
-    }
-
-    updateVideoSource()
-    mobileQuery.addEventListener('change', updateVideoSource)
-
-    return () => mobileQuery.removeEventListener('change', updateVideoSource)
-  }, [])
-
-  useEffect(() => {
-    if (videoRef.current) {
-      // CRITICAL: When changing src, we must call .load() to force the browser to fetch the new file
-      videoRef.current.load()
-      videoRef.current.defaultMuted = true
-      videoRef.current.muted = true
-      videoRef.current.playsInline = true
-      
-      const playPromise = videoRef.current.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => console.log('Video autoplay blocked:', err))
-      }
-    }
-  }, [videoSrc])
+  // The video is handled via dangerouslySetInnerHTML for better mobile autoplay reliability.
 
   const headline = data?.heroHeadline || "Marine Navigation & Communication Systems"
   const subtitle = data?.heroSubtitle || "Trader, distributor, and service provider for reconditioned marine electronics, navigation aids, and automation equipment."
@@ -123,26 +84,31 @@ const HomeHero: FC<HomeHeroProps> = ({ data }) => {
         overflow: 'hidden',
         backgroundColor: 'primary.dark',
       }}>
-        {/* Video element with poster for fast first-frame display */}
-        <video
-          ref={videoRef}
-          src={videoSrc}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          poster="/videos/hero-poster.jpg"
+        {/* Video element rendered via innerHTML for 100% reliable autoplay on iOS and better performance */}
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `
+              <video
+                autoplay
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                poster="/videos/hero-poster.jpg"
+                style="position: absolute; width: 100%; height: 100%; object-fit: cover; object-position: left center; top: 0; left: 0; z-index: 1; opacity: 0.8;"
+              >
+                <source src="/videos/hero-mobile.mp4" type="video/mp4" media="(max-width: 600px)" />
+                <source src="/videos/hero.webm" type="video/webm" />
+              </video>
+            `
+          }}
           style={{
             position: 'absolute',
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'left center',
             top: 0,
             left: 0,
             zIndex: 1,
-            opacity: 0.8,
           }}
         />
       {/* Slight black overlay for cinematic feel and text contrast */}
