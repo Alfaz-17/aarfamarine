@@ -1,8 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import { keyframes } from '@mui/system'
+import { LayoutGrid, GalleryHorizontalEnd } from 'lucide-react'
 import ProductCard from '../product-card'
 
 const scrollAnimation = keyframes`
@@ -15,6 +18,8 @@ interface FeaturedProductsProps {
 }
 
 const FeaturedProducts: FC<FeaturedProductsProps> = ({ products }) => {
+  const [viewMode, setViewMode] = useState<'grid' | 'marquee'>('marquee')
+
   return (
     <Box
       id="featured-products"
@@ -46,44 +51,74 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ products }) => {
               </Typography>
             </Typography>
           </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <IconButton 
+              onClick={() => setViewMode('marquee')}
+              color={viewMode === 'marquee' ? 'primary' : 'default'}
+              sx={{ bgcolor: viewMode === 'marquee' ? 'primary.50' : 'transparent', '&:hover': { bgcolor: 'primary.50' } }}
+              title="Marquee View"
+            >
+              <GalleryHorizontalEnd size={20} />
+            </IconButton>
+            <IconButton 
+              onClick={() => setViewMode('grid')}
+              color={viewMode === 'grid' ? 'primary' : 'default'}
+              sx={{ bgcolor: viewMode === 'grid' ? 'primary.50' : 'transparent', '&:hover': { bgcolor: 'primary.50' } }}
+              title="Grid View"
+            >
+              <LayoutGrid size={20} />
+            </IconButton>
+          </Box>
         </Box>
 
         {products && products.length > 0 ? (
-          <Box
-            sx={{
-              width: '100vw',
-              ml: 'calc(-50vw + 50%)',
-              overflow: 'hidden',
-              py: { xs: 1, md: 2 },
-            }}
-          >
+          viewMode === 'grid' ? (
+            <Box sx={{ py: { xs: 2, md: 4 } }}>
+              <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+                {products.map((product) => (
+                  <Grid item xs={12} sm={6} md={4} key={product._id}>
+                    <ProductCard product={product} tone="light" />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          ) : (
             <Box
               sx={{
-                display: 'flex',
-                gap: { xs: 1.25, sm: 2.5, md: 4 },
-                pr: { xs: 1.25, sm: 2.5, md: 4 }, // padding equal to gap for seamless infinite loop
-                width: 'max-content',
-                animation: `${scrollAnimation} ${products.length * 2 * 5}s linear infinite`,
-                '&:hover': {
-                  animationPlayState: 'paused',
-                },
+                width: '100vw',
+                ml: 'calc(-50vw + 50%)',
+                overflow: 'hidden',
+                py: { xs: 1, md: 2 },
               }}
             >
-              {[...products, ...products, ...products, ...products].map((product, index) => (
-                <Box
-                  key={`${product._id}-${index}`}
-                  sx={{
-                    width: { xs: '70vw', sm: 250, md: 340 },
-                    maxWidth: { xs: '100%', sm: 250, md: 340 },
-                    minWidth: { xs: '70vw', sm: 250, md: 340 },
-                    flexShrink: 0,
-                  }}
-                >
-                  <ProductCard product={product} tone="light" />
-                </Box>
-              ))}
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: { xs: 1.25, sm: 2.5, md: 4 },
+                  pr: { xs: 1.25, sm: 2.5, md: 4 },
+                  width: 'max-content',
+                  animation: `${scrollAnimation} ${products.length * 2 * 5}s linear infinite`,
+                  '&:hover': {
+                    animationPlayState: 'paused',
+                  },
+                }}
+              >
+                {[...products, ...products, ...products, ...products].map((product, index) => (
+                  <Box
+                    key={`${product._id}-${index}`}
+                    sx={{
+                      width: { xs: '70vw', sm: 250, md: 340 },
+                      maxWidth: { xs: '100%', sm: 250, md: 340 },
+                      minWidth: { xs: '70vw', sm: 250, md: 340 },
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ProductCard product={product} tone="light" />
+                  </Box>
+                ))}
+              </Box>
             </Box>
-          </Box>
+          )
         ) : (
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <Typography variant="h6" sx={{ color: 'text.secondary' }}>
