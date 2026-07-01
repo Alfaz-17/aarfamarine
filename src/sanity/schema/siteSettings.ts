@@ -42,6 +42,12 @@ export default defineType({
       fieldset: 'footerSection',
     }),
     defineField({
+      name: 'tel3',
+      title: 'Telephone 3',
+      type: 'string',
+      fieldset: 'footerSection',
+    }),
+    defineField({
       name: 'email1',
       title: 'Email 1',
       type: 'string',
@@ -50,6 +56,12 @@ export default defineType({
     defineField({
       name: 'email2',
       title: 'Email 2',
+      type: 'string',
+      fieldset: 'footerSection',
+    }),
+    defineField({
+      name: 'email3',
+      title: 'Email 3',
       type: 'string',
       fieldset: 'footerSection',
     }),

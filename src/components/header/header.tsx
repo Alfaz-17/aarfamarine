@@ -165,7 +165,7 @@ const Header: FC = () => {
               >
                 <SearchIcon sx={{ color: isScrolled ? 'text.secondary' : 'white', fontSize: 18 }} />
                 <InputBase 
-                  placeholder="Fast search..." 
+                  placeholder="Search..." 
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value)

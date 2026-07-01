@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps = async () => {
     await connectToDatabase()
     
     const [products, brands, homePageData] = await Promise.all([
-      Product.find({}).populate('category').limit(6).lean(),
+      Product.find({ featured: true }).populate('category').limit(10).lean(),
       import('@/lib/models').then(m => m.Brand.find({}).lean()),
       client.fetch(`*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_updatedAt desc)[0]`).catch(() => null)
     ])

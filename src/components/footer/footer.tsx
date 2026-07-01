@@ -4,6 +4,10 @@ import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
+import PhoneIcon from '@mui/icons-material/Phone'
+import EmailIcon from '@mui/icons-material/Email'
+import PersonIcon from '@mui/icons-material/Person'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 import { FooterSocialLinks } from '@/components/footer'
 import { Logo } from '@/components/logo'
 import { client } from '@/lib/sanity'
@@ -83,7 +87,7 @@ const Footer: FC = () => {
               >
                 Marine Navigation Specialists
               </Typography>
-              <Typography variant="body2" sx={{ mb: 2.5, lineHeight: 1.6, fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)' }}>
+              <Typography variant="body1" sx={{ mb: 2.5, lineHeight: 1.7, fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)' }}>
                 Your trusted partner in marine navigation, supplying reconditioned, tested, and certified marine electronics worldwide.
               </Typography>
               <FooterSocialLinks />
@@ -96,25 +100,25 @@ const Footer: FC = () => {
               height: '100%', 
               p: 2.5,
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.85rem' }}>
                 Quick Links
               </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {[['Home', '/'], ['About Us', '/about'], ['Products', '/products'], ['Services', '/services'], ['Gallery', '/gallery'], ['Contact', '/contact']].map(([label, path]) => (
                   <Link 
                     key={label}
                     href={path} 
                     sx={{ 
-                      color: 'rgba(255,255,255,0.6)', 
+                      color: 'rgba(255,255,255,0.85)', 
                       textDecoration: 'none', 
-                      fontSize: '0.8rem',
+                      fontSize: '0.95rem',
                       display: 'flex',
                       alignItems: 'center',
                       transition: 'color 0.2s ease, transform 0.2s ease',
                       '&::before': {
-                        content: '""', width: 4, height: 4, borderRadius: '50%', bgcolor: 'primary.light', mr: 1, opacity: 0, transition: 'opacity 0.2s ease'
+                        content: '""', width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.light', mr: 1.5, opacity: 0, transition: 'opacity 0.2s ease'
                       },
-                      '&:hover': { color: 'common.white', transform: 'translateX(3px)' },
+                      '&:hover': { color: 'common.white', transform: 'translateX(5px)' },
                       '&:hover::before': { opacity: 1 }
                     }}
                   >
@@ -131,12 +135,15 @@ const Footer: FC = () => {
               height: '100%', 
               p: 2.5,
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.85rem' }}>
                 Head Office
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', whiteSpace: 'pre-line', lineHeight: 1.6, fontSize: '0.8rem' }}>
-                {settings?.headOfficeAddress || 'Navapara Prime, Shop No. 28\nHaluria Chowk to Navapara Road\nBhavnagar 364001, Gujarat, India'}
-              </Typography>
+              <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'flex-start' }}>
+                <LocationOnIcon sx={{ fontSize: 22, color: 'primary.light', mt: 0.2 }} />
+                <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.85)', whiteSpace: 'pre-line', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                  {settings?.headOfficeAddress || 'Navapara Prime, Shop No. 28\nHaluria Chowk to Navapara Road\nBhavnagar 364001, Gujarat, India'}
+                </Typography>
+              </Box>
             </Box>
           </Grid>
 
@@ -146,28 +153,53 @@ const Footer: FC = () => {
               height: '100%', 
               p: 2.5,
             }}>
-              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 1.5, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
+              <Typography variant="subtitle2" sx={{ color: 'common.white', fontWeight: 700, mb: 2, textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.85rem' }}>
                 Contact Us
               </Typography>
               
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                <Box>
-                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>MD & Founder: Mr. Afjal Sarvaiya</Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                {/* Professional Founder Design */}
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1.5,
+                  p: 1.5,
+                  borderRadius: 2,
+                  bgcolor: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}>
+                  <Box sx={{ p: 1, borderRadius: '50%', bgcolor: 'primary.main', display: 'flex' }}>
+                    <PersonIcon sx={{ fontSize: 22, color: 'white' }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', fontWeight: 700, fontSize: '0.7rem', letterSpacing: 0.5 }}>MD & FOUNDER</Typography>
+                    <Typography variant="body1" sx={{ color: 'common.white', fontWeight: 600, fontSize: '0.95rem' }}>Mr. Afjal Sarvaiya</Typography>
+                  </Box>
                 </Box>
 
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.25, fontWeight: 600, fontSize: '0.65rem' }}>PHONE</Typography>
-                  <Typography variant="body2" sx={{ color: 'common.white', fontSize: '0.8rem' }}>{settings?.tel1 || '+91 9081811248'}</Typography>
-                  <Typography variant="body2" sx={{ color: 'common.white', mt: 0.2, fontSize: '0.8rem' }}>{settings?.tel2 || '+91 8160002323'}</Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <PhoneIcon sx={{ fontSize: 18, color: 'primary.light' }} />
+                    <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', fontWeight: 700, fontSize: '0.75rem', letterSpacing: 0.5 }}>PHONE</Typography>
+                  </Box>
+                  <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem', mb: 0.5 }}>{settings?.tel1 || '+91 9081811248'}</Typography>
+                  <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem', mb: 0.5 }}>{settings?.tel2 || '+91 8160002323'}</Typography>
+                  <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem' }}>{settings?.tel3 || '+91 8306161422'}</Typography>
                 </Box>
 
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', mb: 0.25, fontWeight: 600, fontSize: '0.65rem' }}>EMAIL</Typography>
-                  <Link href={`mailto:${settings?.email1 || 'sales@aarfamarine.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <EmailIcon sx={{ fontSize: 18, color: 'primary.light' }} />
+                    <Typography variant="caption" sx={{ color: 'primary.light', display: 'block', fontWeight: 700, fontSize: '0.75rem', letterSpacing: 0.5 }}>EMAIL</Typography>
+                  </Box>
+                  <Link href={`mailto:${settings?.email1 || 'sales@aarfamarine.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem', mb: 0.5, textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
                     {settings?.email1 || 'sales@aarfamarine.com'}
                   </Link>
-                  <Link href={`mailto:${settings?.email2 || 'aarfamarine@gmail.com'}`} sx={{ display: 'block', mt: 0.2, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
+                  <Link href={`mailto:${settings?.email2 || 'aarfamarine@gmail.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem', mb: 0.5, textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
                     {settings?.email2 || 'aarfamarine@gmail.com'}
+                  </Link>
+                  <Link href={`mailto:${settings?.email3 || 'info@aarfamarine.com'}`} sx={{ display: 'block', color: 'rgba(255,255,255,0.9)', fontSize: '0.95rem', textDecoration: 'none', transition: 'color 0.2s ease', '&:hover': { color: 'primary.light' } }}>
+                    {settings?.email3 || 'info@aarfamarine.com'}
                   </Link>
                 </Box>
               </Box>
@@ -175,12 +207,11 @@ const Footer: FC = () => {
           </Grid>
         </Grid>
 
-        {/* Footer Bottom Area */}
         <Box
           sx={{
             mt: { xs: 4, md: 5 },
-            pt: 2,
-            borderTop: '1px solid rgba(255,255,255,0.08)',
+            pt: 3,
+            borderTop: '1px solid rgba(255,255,255,0.1)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -188,13 +219,13 @@ const Footer: FC = () => {
             flexDirection: { xs: 'column', md: 'row' },
           }}
         >
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem' }}>
+          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
             &copy; {new Date().getFullYear()} Aarfa Marine. All rights reserved.
           </Typography>
           <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-            <Link href="/privacy" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Privacy Policy</Link>
-            <Link href="/terms" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>Terms of Service</Link>
-            <Typography component="a" href="https://alfaz-dev.vercel.app/" target="_blank" rel="noopener noreferrer" sx={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: '0.75rem', '&:hover': { color: 'primary.light' } }}>
+            <Link href="/privacy" sx={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.85rem', '&:hover': { color: 'primary.light' } }}>Privacy Policy</Link>
+            <Link href="/terms" sx={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.85rem', '&:hover': { color: 'primary.light' } }}>Terms of Service</Link>
+            <Typography component="a" href="https://alfaz-dev.vercel.app/" target="_blank" rel="noopener noreferrer" sx={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.85rem', '&:hover': { color: 'primary.light' } }}>
               Developed by <span style={{ color: '#93C5FD', fontWeight: 600 }}>Alfaz</span>
             </Typography>
           </Box>

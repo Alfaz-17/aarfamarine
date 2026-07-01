@@ -36,23 +36,51 @@ const ProductCard: FC<ProductCardProps> = ({ product, tone = 'dark' }) => {
         borderRadius: 1,
         height: '100%',
         boxShadow: isLight ? { xs: '0 8px 20px rgba(10,25,47,0.07)', md: '0 16px 40px rgba(10,25,47,0.08)' } : 'none',
-        transition: 'all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        '&:hover': {
-          transform: 'translateY(-6px)',
+        position: 'relative',
+        zIndex: 1,
+        overflow: 'hidden', // for the shine effect
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: '-100%',
+          width: '50%',
+          height: '100%',
+          background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent)',
+          transform: 'skewX(-25deg)',
+          transition: 'all 0.6s ease',
+          zIndex: 10,
+          pointerEvents: 'none',
+        },
+        // The expanding fill background for professional pop
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '100%',
+          height: '0%',
           bgcolor: isLight ? 'primary.main' : 'common.white',
+          transition: 'height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          zIndex: -1,
+        },
+        '&:hover': {
+          transform: 'translateY(-10px)',
           borderColor: isLight ? 'primary.main' : 'common.white',
           boxShadow: isLight
-            ? '0 20px 40px rgba(10,25,47,0.2), 0 8px 16px #1E5FA624'
-            : '0 20px 40px rgba(0,0,0,0.3)',
+            ? '0 25px 50px rgba(10,25,47,0.2), 0 10px 20px #1E5FA624'
+            : '0 25px 50px rgba(0,0,0,0.5)',
+          '&::before': {
+            left: '200%',
+          },
+          '&::after': {
+            height: '100%',
+          },
           '& .product-img': {
-            transform: 'scale(1.08)',
+            transform: 'scale(1.08) rotate(1.5deg)',
           },
           '& .product-overlay': {
             opacity: 1,
-          },
-          '& .MuiIconButton-root': {
-            backgroundColor: isLight ? 'common.white' : 'primary.main',
-            color: isLight ? 'primary.main' : 'common.white',
           },
           '& .product-title': {
             color: isLight ? 'common.white' : 'primary.main',
@@ -60,6 +88,14 @@ const ProductCard: FC<ProductCardProps> = ({ product, tone = 'dark' }) => {
           '& .product-desc, & .product-brand': {
             color: isLight ? 'rgba(255,255,255,0.7)' : 'text.secondary',
           },
+          '& .view-more-action': {
+            opacity: 1,
+            transform: 'translateX(0)',
+            color: isLight ? 'common.white' : 'primary.main',
+          },
+          '& .view-more-arrow': {
+            transform: 'translateX(4px)',
+          }
         },
       }}
     >
@@ -173,6 +209,30 @@ const ProductCard: FC<ProductCardProps> = ({ product, tone = 'dark' }) => {
             Brand: {product.brandName}
           </Typography>
         )}
+
+        {/* View Details Action */}
+        <Box 
+          className="view-more-action"
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1, 
+            mt: 1.5, 
+            color: isLight ? 'primary.main' : 'primary.light', 
+            fontWeight: 700, 
+            fontSize: { xs: '0.75rem', md: '0.8rem' },
+            textTransform: 'uppercase',
+            letterSpacing: 1,
+            opacity: 0,
+            transform: 'translateX(-10px)',
+            transition: 'all 0.35s ease',
+          }}
+        >
+          View Details 
+          <Box component="span" className="view-more-arrow" sx={{ transition: 'transform 0.3s ease' }}>
+            →
+          </Box>
+        </Box>
       </Box>
 
       </Box>

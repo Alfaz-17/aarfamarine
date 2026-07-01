@@ -52,7 +52,7 @@ const BrandsSection: FC<BrandsSectionProps> = ({ brands = [] }) => {
           display: 'flex',
           gap: { xs: 4, md: 8 },
           alignItems: 'center',
-          animation: 'scroll 30s linear infinite',
+          animation: `scroll ${(hasImages ? brands.length : STATIC_BRANDS.length) * 2 * 4}s linear infinite`,
           width: 'max-content',
           '@keyframes scroll': {
             '0%': { transform: 'translateX(0)' },

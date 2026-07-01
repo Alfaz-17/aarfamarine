@@ -37,6 +37,9 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
   const [inquiryMessage, setInquiryMessage] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
+  
+  const allImages = [product.image, ...(product.images || [])].filter(Boolean)
+  const [selectedImage, setSelectedImage] = useState<string>(allImages[0] || '/images/marine-bridge.jpg')
 
   const handleRequestQuoteClick = () => {
     setInquiryMessage(`I am interested in requesting a quote for: ${product.title}`)
@@ -88,7 +91,7 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
       {/* Top Navigation Banner / Hero */}
       <PageHero
         title={product.title}
-        image={product.image || product.images?.[0] || '/images/marine-bridge.jpg'}
+        image={selectedImage}
         compact
       />
 
@@ -131,62 +134,84 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
           <Grid container spacing={{ xs: 4, md: 8 }}>
             {/* Left: Images */}
             <Grid item xs={12} md={6}>
+              {/* Main Selected Image Box */}
               <Box 
                 sx={{ 
                   bgcolor: 'background.default', 
-                  borderRadius: 1, 
-                  p: 4, 
+                  borderRadius: 2, 
+                  p: 2, 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
-                  minHeight: { xs: 280, sm: 360, md: 400 },
+                  minHeight: { xs: 350, sm: 450, md: 550 },
+                  position: 'relative',
                   cursor: 'pointer',
                   transition: 'transform 0.2s',
-                  '&:hover': { transform: 'scale(1.02)' }
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  '&:hover': { transform: 'scale(1.01)', borderColor: 'primary.main' }
                 }}
-                onClick={() => {
-                  if (product.image || product.images?.[0]) {
-                    setLightboxImage(product.image || product.images[0])
-                  }
-                }}
+                onClick={() => setLightboxImage(selectedImage)}
               >
                 {product.featured && (
                   <Chip 
                     label="Featured" 
                     color="primary" 
-                    sx={{ position: 'absolute', top: 16, left: 16, fontWeight: 700 }} 
+                    sx={{ position: 'absolute', top: 16, left: 16, fontWeight: 700, zIndex: 1 }} 
                   />
                 )}
-                {product.image || product.images?.[0] ? (
+                {selectedImage ? (
                   <img
-                    src={product.image || product.images[0]}
+                    src={selectedImage}
                     alt={product.title}
-                    style={{ maxWidth: '100%', maxHeight: 500, objectFit: 'contain' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: 550 }}
                   />
                 ) : (
                   <Typography color="text.secondary">No Image Available</Typography>
                 )}
               </Box>
               
-              {/* Secondary Images if any */}
-              {product.images && product.images.length > 1 && (
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                  {product.images.map((img: string, idx: number) => (
-                    <Grid item xs={3} key={idx}>
-                      <Box 
-                        sx={{ 
-                          bgcolor: 'background.default', borderRadius: 1, p: 1, height: 80, 
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          cursor: 'pointer', border: '2px solid transparent',
-                          '&:hover': { borderColor: 'primary.main' }
-                        }}
-                        onClick={() => setLightboxImage(img)}
-                      >
-                         <img src={img} alt={`${product.title} ${idx}`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-                      </Box>
-                    </Grid>
+              {/* Horizontal Scrollable Thumbnails */}
+              {allImages.length > 1 && (
+                <Box 
+                  sx={{ 
+                    display: 'flex', 
+                    gap: 2, 
+                    mt: 3, 
+                    pb: 1.5,
+                    overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch',
+                    '&::-webkit-scrollbar': { height: 6 },
+                    '&::-webkit-scrollbar-thumb': { backgroundColor: 'primary.light', borderRadius: 4 },
+                    '&::-webkit-scrollbar-track': { backgroundColor: 'grey.100', borderRadius: 4 }
+                  }}
+                >
+                  {allImages.map((img: string, idx: number) => (
+                    <Box 
+                      key={idx}
+                      sx={{ 
+                        flexShrink: 0,
+                        width: 100,
+                        height: 100,
+                        bgcolor: 'background.default', 
+                        borderRadius: 1, 
+                        p: 1, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        cursor: 'pointer', 
+                        border: '2px solid',
+                        borderColor: selectedImage === img ? 'primary.main' : 'divider',
+                        transition: 'all 0.2s',
+                        '&:hover': { borderColor: 'primary.main', transform: 'translateY(-2px)' }
+                      }}
+                      onClick={() => setSelectedImage(img)}
+                    >
+                       <img src={img} alt={`${product.title} thumbnail ${idx}`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                    </Box>
                   ))}
-                </Grid>
+                </Box>
               )}
             </Grid>
 
@@ -203,13 +228,6 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
               </Typography>
 
               <Box sx={{ display: 'flex', gap: { xs: 1.5, md: 3 }, mb: 4, alignItems: 'center', flexWrap: 'wrap' }}>
-
-                
-                {product.sku && (
-                  <Typography variant="body2" color="text.secondary">
-                    SKU: <strong>{product.sku}</strong>
-                  </Typography>
-                )}
               </Box>
 
               <Typography sx={{ color: 'text.secondary', lineHeight: 1.8, fontSize: { xs: '1rem', md: '1.05rem' }, mb: 5 }}>

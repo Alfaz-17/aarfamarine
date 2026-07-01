@@ -63,7 +63,7 @@ const FeaturedProducts: FC<FeaturedProductsProps> = ({ products }) => {
                 gap: { xs: 1.25, sm: 2.5, md: 4 },
                 pr: { xs: 1.25, sm: 2.5, md: 4 }, // padding equal to gap for seamless infinite loop
                 width: 'max-content',
-                animation: `${scrollAnimation} 40s linear infinite`,
+                animation: `${scrollAnimation} ${products.length * 2 * 5}s linear infinite`,
                 '&:hover': {
                   animationPlayState: 'paused',
                 },

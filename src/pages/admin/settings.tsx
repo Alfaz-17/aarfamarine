@@ -14,7 +14,7 @@ export default function AdminSettingsPage() {
     geminiApiKey: '',
     autoBackgroundRemoval: false,
     applyWatermark: true,
-    watermarkText: 'Aarfa Marine Solutions',
+    watermarkText: 'Aarfa Marine',
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +32,7 @@ export default function AdminSettingsPage() {
             geminiApiKey: data.geminiApiKey || '',
             autoBackgroundRemoval: Boolean(data.autoBackgroundRemoval),
             applyWatermark: data.applyWatermark !== false,
-            watermarkText: data.watermarkText || 'Aarfa Marine Solutions',
+            watermarkText: data.watermarkText || 'Aarfa Marine',
           });
         }
       } catch (err) {
@@ -155,7 +155,7 @@ export default function AdminSettingsPage() {
               value={settings.watermarkText || ''}
               onChange={(e) => setSettings(prev => ({ ...prev, watermarkText: e.target.value }))}
               className="w-full bg-slate-950/60 border border-primary-light/20 p-5 text-sm outline-none focus:border-primary-light transition-colors font-mono text-white"
-              placeholder="Aarfa Marine Solutions"
+              placeholder="Aarfa Marine"
             />
           </div>
 

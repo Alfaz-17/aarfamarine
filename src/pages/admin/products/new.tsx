@@ -12,9 +12,14 @@ import AdminLayout from '@/components/admin/admin-layout';
 export default function AdminProductFormPage() {
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
+    metaTitle: '',
+    metaDescription: '',
     description: '',
     brandName: '',
     category: '',
+    keywords: [] as string[],
+    specifications: {} as any,
     featured: false
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -35,13 +40,16 @@ export default function AdminProductFormPage() {
   const [globalSettings, setGlobalSettings] = useState({
     autoBackgroundRemoval: false,
     applyWatermark: true,
-    watermarkText: 'Aarfa Marine Solutions'
+    watermarkText: 'Aarfa Marine'
   });
 
   // Background removal state
   const [isRemovingBg, setIsRemovingBg] = useState(false);
   const [bgProcessingIndex, setBgProcessingIndex] = useState<{type: 'main' | 'gallery', index?: number} | null>(null);
   const [bgStatus, setBgStatus] = useState('');
+
+  const [isAiEnabled, setIsAiEnabled] = useState(true);
+  const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +89,75 @@ export default function AdminProductFormPage() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const analyzeImage = async () => {
+    if (!isAiEnabled || !imageFile) return;
+    
+    setIsAiAnalyzing(true);
+    setMessage({ type: 'info', text: 'Analyzing image with AI...' });
+
+    try {
+      const base64Data = await fileToBase64(imageFile);
+      const categoryNames = categories.map(c => c.name);
+
+      const response = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          imageBase64: base64Data,
+          categories: categoryNames
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'AI analysis failed');
+      }
+
+      const data = await response.json();
+
+      setFormData(prev => ({
+        ...prev,
+        title: data.title || prev.title,
+        description: data.description || prev.description,
+        slug: data.slug || prev.slug,
+        metaTitle: data.title || prev.metaTitle,
+        metaDescription: data.metaDescription || prev.metaDescription,
+        brandName: data.brand || prev.brandName,
+        keywords: data.keywords || prev.keywords,
+        specifications: data.specifications || prev.specifications,
+      }));
+
+      if (data.categoryName && categories.length > 0) {
+        const matchedCategory = categories.find(cat => 
+          cat.name.toLowerCase() === data.categoryName.toLowerCase() ||
+          cat.name.toLowerCase().includes(data.categoryName.toLowerCase()) ||
+          data.categoryName.toLowerCase().includes(cat.name.toLowerCase())
+        );
+        if (matchedCategory) {
+          setFormData(prev => ({ ...prev, category: matchedCategory._id }));
+        }
+      }
+
+      setMessage({ type: 'success', text: 'AI analysis complete! Fields auto-populated.' });
+    } catch (error) {
+      console.error('AI Analysis Error:', error);
+      setMessage({ type: 'error', text: 'AI analysis failed. Please fill details manually.' });
+    } finally {
+      setIsAiAnalyzing(false);
+    }
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,7 +284,11 @@ export default function AdminProductFormPage() {
 
       setMessage({ type: "success", text: "Asset added successfully to registry." });
       // Reset form
-      setFormData({ title: '', description: '', brandName: '', category: '', featured: false });
+      setFormData({ 
+        title: '', slug: '', metaTitle: '', metaDescription: '', 
+        description: '', brandName: '', category: '', 
+        keywords: [], specifications: {}, featured: false 
+      });
       setImageFile(null);
       setImagePreview('');
       setImagesFile([]);
@@ -266,6 +347,20 @@ export default function AdminProductFormPage() {
                     <Sparkles className="w-3 h-3 text-primary-light" />
                     Auto BG: {globalSettings.autoBackgroundRemoval ? 'AUTO' : 'OFF'}
                   </div>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-slate-950 border border-slate-800 text-[9px] font-mono font-bold uppercase tracking-tight text-slate-400">
+                    <Sparkles className="w-3 h-3 text-primary-light" />
+                    AI Analysis: 
+                    <button
+                      type="button"
+                      onClick={() => setIsAiEnabled(!isAiEnabled)}
+                      className={`w-8 h-4 rounded-full p-0.5 ml-2 transition-colors ${isAiEnabled ? 'bg-primary-light' : 'bg-slate-700'}`}
+                    >
+                      <motion.div
+                        animate={{ x: isAiEnabled ? 16 : 0 }}
+                        className="w-3 h-3 bg-white rounded-full shadow-sm"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -274,22 +369,35 @@ export default function AdminProductFormPage() {
                     <div className="relative border border-slate-800 overflow-hidden bg-slate-950/60 flex items-center justify-center min-h-[300px]">
                        <img src={imagePreview} alt="Preview" className="max-w-full max-h-[600px] w-auto h-auto object-contain" />
                        <div className="absolute top-2 right-2 flex flex-col gap-2">
-                          <button 
-                            type="button"
-                            onClick={() => { setImageFile(null); setImagePreview(''); }} 
-                            className="bg-red-600/80 p-2 text-white border-0 cursor-pointer hover:bg-red-600"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-
-                           <button
+                           <button 
                              type="button"
-                             onClick={() => imagePreview && setCropTarget({ type: 'main', url: imagePreview })}
-                             className="bg-primary-light/80 p-2 text-white border-0 cursor-pointer hover:bg-primary-light"
-                             title="Crop Image"
+                             onClick={() => { setImageFile(null); setImagePreview(''); }} 
+                             className="bg-red-600/80 p-2 text-white border-0 cursor-pointer hover:bg-red-600 rounded"
+                             title="Remove Image"
                            >
-                             <Crop className="w-4 h-4" />
+                             <X className="w-4 h-4" />
                            </button>
+
+                           {isAiEnabled && (
+                             <button
+                               type="button"
+                               disabled={isAiAnalyzing}
+                               onClick={() => analyzeImage()}
+                               className="bg-emerald-600/80 p-2 text-white border-0 cursor-pointer hover:bg-emerald-600 disabled:opacity-50 rounded"
+                               title="AI Analysis"
+                             >
+                               <Sparkles className="w-4 h-4" />
+                             </button>
+                           )}
+
+                            <button
+                              type="button"
+                              onClick={() => imagePreview && setCropTarget({ type: 'main', url: imagePreview })}
+                              className="bg-primary-light/80 p-2 text-white border-0 cursor-pointer hover:bg-primary-light rounded"
+                              title="Crop Image"
+                            >
+                              <Crop className="w-4 h-4" />
+                            </button>
                        </div>
 
                        {isRemovingBg && bgProcessingIndex?.type === 'main' && (
@@ -363,15 +471,15 @@ export default function AdminProductFormPage() {
             
             <div className="space-y-6">
                <div className="space-y-2">
-                  <label className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block">Product Name *</label>
-                  <input
-                    name="title"
-                    placeholder="E.g., MAN B&W Cylinder Liner"
-                    className="w-full px-4 py-4 bg-slate-950/60 border border-primary-light/20 focus:border-primary-light focus:bg-slate-950 outline-none text-xs text-white font-mono"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                  />
+                   <label className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block">Product Name *</label>
+                   <input
+                     name="title"
+                     placeholder="E.g., MAN B&W Cylinder Liner"
+                     className={`w-full px-4 py-4 bg-slate-950/60 border outline-none text-xs text-white font-mono transition-colors ${isAiAnalyzing ? 'border-primary-light' : 'border-primary-light/20 focus:border-primary-light focus:bg-slate-950'}`}
+                     value={formData.title}
+                     onChange={handleChange}
+                     required
+                   />
                </div>
 
                <div className="grid grid-cols-2 gap-4">
@@ -414,6 +522,39 @@ export default function AdminProductFormPage() {
                   />
                   <label htmlFor="featured" className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest cursor-pointer select-none">Mark as Featured Product</label>
                </div>
+
+                <div className="space-y-2">
+                   <label className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block">URL Slug</label>
+                   <input
+                     name="slug"
+                     placeholder="product-url-slug"
+                     className="w-full px-4 py-4 bg-slate-950/60 border border-primary-light/20 focus:border-primary-light focus:bg-slate-950 outline-none text-xs text-white font-mono"
+                     value={formData.slug}
+                     onChange={handleChange}
+                   />
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block">Meta Title</label>
+                   <input
+                     name="metaTitle"
+                     placeholder="Google Search Title"
+                     className="w-full px-4 py-4 bg-slate-950/60 border border-primary-light/20 focus:border-primary-light focus:bg-slate-950 outline-none text-xs text-white font-mono"
+                     value={formData.metaTitle}
+                     onChange={handleChange}
+                   />
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-widest block">Meta Description</label>
+                   <textarea
+                     name="metaDescription"
+                     placeholder="Short summary for search results (max 160 chars)"
+                     className="w-full px-4 py-4 bg-slate-950/60 border border-primary-light/20 focus:border-primary-light focus:bg-slate-950 outline-none text-xs text-white font-mono min-h-[100px]"
+                     value={formData.metaDescription}
+                     onChange={handleChange}
+                   />
+                </div>
             </div>
           </div>
 
@@ -440,7 +581,7 @@ export default function AdminProductFormPage() {
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={isLoading || isUploading}
+            disabled={isLoading || isUploading || isAiAnalyzing}
             className="w-full lg:w-1/2 py-5 bg-primary-light hover:bg-primary-light text-white font-mono font-bold uppercase tracking-[0.3em] text-xs transition-all shadow-2xl flex items-center justify-center gap-4 disabled:opacity-70 border-0 cursor-pointer"
           >
             {isLoading || isUploading ? (

@@ -19,12 +19,18 @@ export const addWatermark = (file: File, watermarkText = "Aarfa Marine") => {
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        const fontSize = canvas.width / 30; 
-        const opacity = 0.12; 
-        const spacing = canvas.width / 3.5; 
+        const fontSize = Math.max(canvas.width, canvas.height) / 15; 
+        const opacity = 0.15; 
         const angle = -30 * (Math.PI / 180);
 
         ctx.font = `bold ${fontSize}px sans-serif`;
+        
+        // Dynamically calculate spacing based on actual text size to prevent overlaps
+        const textMetrics = ctx.measureText(watermarkText);
+        const textWidth = textMetrics.width;
+        const spacingX = textWidth * 1.5; // 50% gap horizontally
+        const spacingY = fontSize * 3;    // 3 lines gap vertically
+
         ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -33,8 +39,11 @@ export const addWatermark = (file: File, watermarkText = "Aarfa Marine") => {
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate(angle);
 
-        for (let x = -canvas.width; x < canvas.width; x += spacing) {
-          for (let y = -canvas.height; y < canvas.height; y += spacing) {
+        // Ensure we cover the corners even when rotated by using a larger bound
+        const maxDim = Math.max(canvas.width, canvas.height) * 1.5;
+
+        for (let x = -maxDim; x < maxDim; x += spacingX) {
+          for (let y = -maxDim; y < maxDim; y += spacingY) {
             ctx.fillText(watermarkText, x, y);
           }
         }
