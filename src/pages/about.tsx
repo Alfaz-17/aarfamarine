@@ -268,7 +268,7 @@ export const getStaticProps: GetStaticProps = async () => {
   try {
     await connectToDatabase()
     const [brands, teamMembers] = await Promise.all([
-      Brand.find({}).lean(),
+      Brand.find({}).select('name image _id').lean(),
       client.fetch(`*[_type == "teamMember" && !(_id in path("drafts.**"))] | order(order asc)`).catch(() => [])
     ])
     
@@ -277,7 +277,7 @@ export const getStaticProps: GetStaticProps = async () => {
         brands: JSON.parse(JSON.stringify(brands)),
         teamMembers,
       },
-      revalidate: 60,
+      revalidate: 86400, // 24 hours — team and brand data changes very rarely
     }
   } catch (error) {
     return {
@@ -285,7 +285,7 @@ export const getStaticProps: GetStaticProps = async () => {
         brands: [],
         teamMembers: [],
       },
-      revalidate: 60,
+      revalidate: 86400,
     }
   }
 }

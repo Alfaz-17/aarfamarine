@@ -190,14 +190,14 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         images: JSON.parse(JSON.stringify(images))
       },
-      revalidate: 60
+      revalidate: 86400 // 24 hours — gallery images change only when admin uploads
     }
   } catch (error) {
     return {
       props: {
         images: []
       },
-      revalidate: 60
+      revalidate: 86400
     }
   }
 }

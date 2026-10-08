@@ -81,7 +81,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         products: serializedProducts,
       },
-      revalidate: 60,
+      revalidate: 3600, // 1 hour — new arrivals don't change every minute
     }
   } catch (error) {
     console.error("Error fetching new arrivals:", error)
@@ -89,7 +89,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         products: [],
       },
-      revalidate: 60,
+      revalidate: 3600,
     }
   }
 }

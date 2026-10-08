@@ -499,9 +499,14 @@ export const getStaticProps: GetStaticProps = async () => {
     await connectToDatabase()
     
     const [products, categories, brands] = await Promise.all([
-      Product.find({}).populate('category', 'name').populate('brand', 'name').sort({ createdAt: -1 }).lean(),
+      Product.find({})
+        .select('title image category brand brandName availability featured _id createdAt')
+        .populate('category', 'name mainCategory')
+        .populate('brand', 'name')
+        .sort({ createdAt: -1 })
+        .lean(),
       Category.find({}).sort({ name: 1 }).lean(),
-      Brand.find({}).sort({ name: 1 }).lean(),
+      Brand.find({}).select('name _id').sort({ name: 1 }).lean(),
     ])
     
     const serializedProducts = JSON.parse(JSON.stringify(products))
@@ -514,7 +519,7 @@ export const getStaticProps: GetStaticProps = async () => {
         categories: serializedCategories || [],
         brands: serializedBrands || [],
       },
-      revalidate: 60, // ISR: revalidate every 60 seconds
+      revalidate: 3600, // ISR: revalidate every 1 hour — product catalog changes infrequently
     }
   } catch (error) {
     console.error("Error fetching products catalog:", error)
@@ -524,7 +529,7 @@ export const getStaticProps: GetStaticProps = async () => {
         categories: [],
         brands: [],
       },
-      revalidate: 60,
+      revalidate: 3600,
     }
   }
 }

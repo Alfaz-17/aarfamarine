@@ -8,8 +8,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
-      // Aggressive edge caching (cache for 60s, serve stale for up to 5 mins while revalidating)
-      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300')
+      // CDN caching: cache for 5 minutes, serve stale for up to 30 mins while revalidating
+      // This prevents repeated DB hits from the same CDN node for product listings
+      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=1800')
       
       const { category, featured, search, limit } = req.query
       const filter: any = {}

@@ -191,14 +191,14 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         settings: settings || null,
       },
-      revalidate: 60,
+      revalidate: 86400, // 24 hours — contact info changes very rarely
     }
   } catch (error) {
     return {
       props: {
         settings: null,
       },
-      revalidate: 60,
+      revalidate: 86400,
     }
   }
 }

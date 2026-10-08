@@ -77,7 +77,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     const sitemap = generateSiteMap(products, categories)
 
     res.setHeader('Content-Type', 'text/xml')
-    // we send the XML to the browser
+    // Cache at CDN for 24h, serve stale for up to 1h while regenerating.
+    // This prevents bots from triggering a MongoDB query on every sitemap hit.
+    res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=3600')
     res.write(sitemap)
     res.end()
 

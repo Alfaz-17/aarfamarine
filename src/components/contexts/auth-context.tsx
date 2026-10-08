@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, FC, ReactNode } from 'react'
+import { useRouter } from 'next/router'
 import api from '@/lib/api'
 
 interface AuthContextType {
@@ -26,10 +27,18 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
-    checkAuth()
-  }, [])
+    // Only run auth check on admin routes.
+    // Public pages should never trigger /api/auth/me — it's a Vercel Function call
+    // that adds CPU cost for every visitor who has a token in localStorage.
+    if (router.pathname.startsWith('/admin')) {
+      checkAuth()
+    } else {
+      setLoading(false)
+    }
+  }, [router.pathname])
 
   const checkAuth = async () => {
     try {

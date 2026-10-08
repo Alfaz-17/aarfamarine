@@ -10,18 +10,12 @@ import PersonIcon from '@mui/icons-material/Person'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import { FooterSocialLinks } from '@/components/footer'
 import { Logo } from '@/components/logo'
-import { client } from '@/lib/sanity'
 
 const Footer: FC = () => {
-  const [settings, setSettings] = React.useState<any>(null)
-
-  React.useEffect(() => {
-    client.fetch(`*[_type == "siteSettings" && !(_id in path("drafts.**"))][0]`)
-      .then((data) => {
-        if (data) setSettings(data)
-      })
-      .catch((err) => console.error("Failed to fetch siteSettings", err))
-  }, [])
+  // Contact info is baked in as fallback values below.
+  // If contact details need to be dynamic, fetch them in getStaticProps of each page
+  // and pass via context — not via a live client-side Sanity request on every page load.
+  const settings: any = null
 
   return (
     <Box

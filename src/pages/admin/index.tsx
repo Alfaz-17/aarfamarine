@@ -10,9 +10,8 @@ export default function AdminDashboard() {
   const [time, setTime] = useState('');
 
   useEffect(() => {
+    // Set time once on mount — no setInterval needed for a dashboard timestamp
     setTime(new Date().toLocaleTimeString());
-    const interval = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
-    return () => clearInterval(interval);
   }, []);
 
   if (!stats) return <div className="text-xs font-mono font-bold uppercase tracking-widest animate-pulse p-4 text-primary-light">Syncing marine system data...</div>;

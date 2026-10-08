@@ -333,9 +333,19 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [], // Pre-render no pages at build time, render on demand
-    fallback: 'blocking' // Wait for HTML to generate on first request
+  try {
+    await connectToDatabase()
+    // Pre-build all product pages at deploy time so bot crawling is free
+    const products = await Product.find({}).select('_id slug').lean()
+    const paths = products.map((p: any) => ({
+      params: { id: (p.slug || p._id.toString()) as string }
+    }))
+    return {
+      paths,
+      fallback: 'blocking' // New products added after deploy are still handled
+    }
+  } catch {
+    return { paths: [], fallback: 'blocking' }
   }
 }
 
@@ -369,7 +379,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         product: JSON.parse(JSON.stringify(product)),
         relatedProducts: JSON.parse(JSON.stringify(relatedProducts))
       },
-      revalidate: 60,
+      revalidate: 3600, // ISR: revalidate every 1 hour — product details rarely change
     }
   } catch (error) {
     console.error("Error in getStaticProps for product:", error)

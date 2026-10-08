@@ -155,7 +155,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         services: serializedServices,
       },
-      revalidate: 60,
+      revalidate: 86400, // 24 hours — service list changes very rarely
     }
   } catch (error) {
     console.error("Error fetching services:", error)
@@ -163,6 +163,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         services: [],
       },
+      revalidate: 86400,
     }
   }
 }
