@@ -15,7 +15,7 @@ function generateImageSiteMap(products: any[]) {
          
          return `
        <url>
-           <loc>${EXTERNAL_DATA_URL}/product/${_id}</loc>
+           <loc>${EXTERNAL_DATA_URL}/products/${_id}</loc>
            <image:image>
                <image:loc>${image.startsWith('http') ? image : `${EXTERNAL_DATA_URL}${image}`}</image:loc>
                <image:title>${cleanTitle} ${cleanBrand ? `by ${cleanBrand}` : ''} | Marine Spare Parts</image:title>
@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     const sitemap = generateImageSiteMap(products)
 
     res.setHeader('Content-Type', 'text/xml')
-    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600') // Cache for 1 hour
+    res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=3600') // Cache at CDN for 24h
     res.write(sitemap)
     res.end()
 

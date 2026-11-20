@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
+      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=1800')
       const categories = await Category.find({}).sort({ createdAt: -1 }).lean()
       return res.status(200).json(categories)
     } catch (error) {

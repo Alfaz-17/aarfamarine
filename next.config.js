@@ -36,6 +36,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/product/:id',
+        destination: '/products/:id',
+        permanent: true,
+      },
+    ];
+  },
   poweredByHeader: false,
   compress: true,
   eslint: {

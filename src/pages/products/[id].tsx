@@ -379,7 +379,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         product: JSON.parse(JSON.stringify(product)),
         relatedProducts: JSON.parse(JSON.stringify(relatedProducts))
       },
-      revalidate: 3600, // ISR: revalidate every 1 hour — product details rarely change
+      revalidate: 86400, // ISR: revalidate every 24 hours — product details rarely change
     }
   } catch (error) {
     console.error("Error in getStaticProps for product:", error)

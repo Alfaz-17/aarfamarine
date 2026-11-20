@@ -66,7 +66,7 @@ export const getStaticProps: GetStaticProps = async () => {
         brands: serializedBrands,
         homePageData: homePageData || null,
       },
-      revalidate: 3600, // ISR: revalidate every 1 hour — homepage content changes infrequently
+      revalidate: 86400, // ISR: revalidate every 24 hours — homepage content changes infrequently
     }
   } catch (error) {
     console.error("Error fetching homepage data:", error)
@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = async () => {
         brands: [],
         homePageData: null,
       },
-      revalidate: 3600,
+      revalidate: 86400,
     }
   }
 }
