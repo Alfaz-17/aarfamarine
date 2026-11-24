@@ -7,7 +7,7 @@ interface SEOProps {
   keywords?: string[]
   canonicalUrl?: string
   ogImage?: string
-  ogType?: 'website' | 'article'
+  ogType?: 'website' | 'article' | 'product'
   noindex?: boolean
 }
 

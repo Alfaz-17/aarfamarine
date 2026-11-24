@@ -25,6 +25,8 @@ import { MainLayout } from '@/components/layout'
 import PageHero from '@/components/page-hero'
 import ProductCard from '@/components/product-card'
 import { InquiryModal } from '@/components/common/inquiry-modal'
+import { SEO } from '@/components/seo/SEO'
+import { ProductStructuredData } from '@/components/seo/structured-data'
 import connectToDatabase from '@/lib/db'
 import { Product } from '@/lib/models'
 
@@ -83,10 +85,23 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
 
   return (
     <>
-      <Head>
-        <title>{product.metaTitle || product.title} | Aarfa Marine</title>
-        <meta name="description" content={product.metaDescription || product.description?.substring(0, 160)} />
-      </Head>
+      <SEO
+        title={product.metaTitle || product.title}
+        description={product.metaDescription || (product.description ? product.description.substring(0, 160) : `Reconditioned ${product.title} marine spare part sourced from Alang Shipyard. Inspected and ready for global export.`)}
+        canonicalUrl={`/products/${product.slug || product._id}`}
+        ogImage={selectedImage || product.image}
+        ogType="product"
+        keywords={[
+          product.title,
+          product.brandName || product.brand?.name,
+          product.categoryName || product.category?.name,
+          'marine spare parts',
+          'Alang shipyard',
+          'reconditioned marine equipment',
+          'ship navigation parts'
+        ].filter(Boolean)}
+      />
+      <ProductStructuredData product={product} />
 
       {/* Top Navigation Banner / Hero */}
       <PageHero
@@ -164,7 +179,7 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
                 {selectedImage ? (
                   <img
                     src={selectedImage}
-                    alt={product.title}
+                    alt={`${product.title}${product.brandName || product.brand?.name ? ` by ${product.brandName || product.brand?.name}` : ''} - Marine Spare Part Sourced from Alang Shipyard`}
                     style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: 550 }}
                   />
                 ) : (
@@ -208,7 +223,11 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
                       }}
                       onClick={() => setSelectedImage(img)}
                     >
-                       <img src={img} alt={`${product.title} thumbnail ${idx}`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                       <img 
+                         src={img} 
+                         alt={`${product.title} - View ${idx + 1}`} 
+                         style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} 
+                       />
                     </Box>
                   ))}
                 </Box>
@@ -325,7 +344,11 @@ const ProductDetailPage: NextPageWithLayout<ProductDetailPageProps> = ({ product
           <CloseIcon size={32} />
         </IconButton>
         {lightboxImage && (
-          <img src={lightboxImage} alt="Enlarged product view" style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }} />
+          <img 
+            src={lightboxImage} 
+            alt={`${product.title} - High Resolution View`} 
+            style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }} 
+          />
         )}
       </Dialog>
     </>

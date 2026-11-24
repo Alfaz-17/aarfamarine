@@ -53,6 +53,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  modularizeImports: {
+    '@mui/icons-material': {
+      transform: '@mui/icons-material/{{member}}',
+    },
+  },
   compiler: {
     styledComponents: true,
   },

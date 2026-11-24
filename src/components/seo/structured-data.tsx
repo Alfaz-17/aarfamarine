@@ -90,3 +90,95 @@ export function GlobalStructuredData() {
     </>
   )
 }
+
+export function ProductStructuredData({ product }: { product: any }) {
+  if (!product) return null
+
+  const baseUrl = 'https://aarfamarine.com'
+  const productUrl = `${baseUrl}/products/${product.slug || product._id}`
+  const mainImage = product.image || (product.images && product.images[0]) || '/images/marine-bridge.jpg'
+  const mainImageUrl = mainImage.startsWith('http') ? mainImage : `${baseUrl}${mainImage}`
+
+  const allImages = [
+    mainImageUrl,
+    ...(product.images || [])
+      .map((img: string) => (img.startsWith('http') ? img : `${baseUrl}${img}`))
+  ].filter((v, i, a) => a.indexOf(v) === i)
+
+  const brandName = product.brand?.name || product.brandName || 'Marine Equipment'
+  const categoryName = product.category?.name || product.categoryName || 'Marine Spare Parts'
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.title,
+    "image": allImages,
+    "description": product.metaDescription || product.description || `Reconditioned ${product.title} marine spare part sourced from Alang Shipyard, Bhavnagar, Gujarat, India.`,
+    "sku": product.sku || product._id?.toString(),
+    "mpn": product.model || product.sku || product._id?.toString(),
+    "brand": {
+      "@type": "Brand",
+      "name": brandName
+    },
+    "category": categoryName,
+    "itemCondition": "https://schema.org/RefurbishedCondition",
+    "offers": {
+      "@type": "Offer",
+      "url": productUrl,
+      "priceCurrency": "USD",
+      "price": "0",
+      "priceValidUntil": "2027-12-31",
+      "availability": product.availability === 'out-of-stock' ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/RefurbishedCondition",
+      "seller": {
+        "@type": "Organization",
+        "name": "Aarfa Marine",
+        "url": baseUrl
+      }
+    }
+  }
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": baseUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Products",
+        "item": `${baseUrl}/products`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": categoryName,
+        "item": `${baseUrl}/products?category=${encodeURIComponent(categoryName)}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": product.title,
+        "item": productUrl
+      }
+    ]
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+    </>
+  )
+}
